@@ -4,7 +4,8 @@ import "time"
 
 // predefined openWB topic names
 const (
-	Timeout = 15 * time.Second
+	Timeout           = 15 * time.Second
+	HeartbeatInterval = 10 * time.Second // loadpoint only client heartbeat
 
 	// root topic
 	RootTopic = "openWB"
@@ -17,11 +18,11 @@ const (
 	ChargingTopic   = "boolChargeStat"
 	ConfiguredTopic = "boolChargePointConfigured"
 
-	// getter/setter
-	EnabledTopic    = "ChargePointEnabled"
-	MaxCurrentTopic = "DirectChargeAmps"
-	PhasesTopic     = "U1p3p"
-	RfidTopic       = "rfid"
+	// loadpoint only topics
+	HeartbeatTopic     = "heartbeat"
+	ChargeCurrentTopic = "Current"
+	PhasesTopic        = "U1p3p"
+	RfidTopic          = "rfid"
 
 	// charge power
 	ChargePowerTopic       = "W"
