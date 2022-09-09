@@ -79,7 +79,7 @@ func (p *Script) WithJq(jq string) (*Script, error) {
 func (m *Script) Send(title, msg string) {
 	_, err := m.exec(m.script + " '" + title + "' '" + msg + "'")
 	if err != nil {
-		m.log.ERROR.Printf("Script message error: ", err)
+		m.log.ERROR.Printf("Script message error: %v", err)
 	}
 }
 
