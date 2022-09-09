@@ -17,7 +17,7 @@ import (
 	"github.com/kballard/go-shellquote"
 )
 
-// Script implements shell script-based providers and setters
+// Script implements shell script-based message service and setters
 type Script struct {
 	log     *util.Logger
 	script  string
@@ -52,6 +52,7 @@ func NewScriptMessenger(script string, timeout time.Duration, scale float64, cac
 
 	return s, nil
 }
+
 func (p *Script) WithRegex(regex string) (*Script, error) {
 	re, err := regexp.Compile(regex)
 	if err != nil {
@@ -74,10 +75,9 @@ func (p *Script) WithJq(jq string) (*Script, error) {
 	return p, nil
 }
 
-// Send sends to all receivers
+// Send calls the script
 func (m *Script) Send(title, msg string) {
-	_, err := m.exec(m.script + " '" + title + " " + msg + "'")
-	//_, err := m.exec(m.script, title, msg)
+	_, err := m.exec(m.script + " '" + title + "' '" + msg + "'")
 	if err != nil {
 		m.log.ERROR.Printf("Script message error: ", err)
 	}
@@ -88,13 +88,15 @@ func (m *Script) exec(script string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), m.timeout)
 	defer cancel()
 
 	cmd := exec.CommandContext(ctx, args[0], args[1:]...)
 	b, err := cmd.Output()
+
 	s := strings.TrimSpace(string(b))
-	m.log.DEBUG.Printf("+++ test %s: %s", strings.Join(args, " "), s)
+
 	if err != nil {
 		// use STDOUT if available
 		var ee *exec.ExitError
